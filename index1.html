@@ -115,15 +115,15 @@
         
         // Set content
         document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
-        document.getElementById('ticket').textContent = params.get('boleta') || '580066-P-002';
-        document.getElementById('customer').textContent = params.get('mesa') || 'edgar';
+        document.getElementById('ticket').textContent = params.get('boleta');
+        document.getElementById('customer').textContent = params.get('mesa');
         document.getElementById('date').textContent = params.get('fecha') || 'FECHA DE RECEPCION: 12/30/2024 16:35:49';
-        document.getElementById('quantity').textContent = params.get('cantidades') || '1';
-        document.getElementById('description').textContent = params.get('servicios') || 'Bolsa de agua 6L';
-        document.getElementById('item-total').textContent = params.get('total') || '3500';
-        document.getElementById('cash').textContent = params.get('efectivo') || 'NaN';
-        document.getElementById('total').textContent = params.get('total') || '3500';
-        document.getElementById('change').textContent = params.get('devueltas') || '-3500';
+        document.getElementById('quantity').textContent = params.get('cantidades');
+        document.getElementById('description').textContent = params.get('servicios');
+        document.getElementById('item-total').textContent = params.get('total');
+        document.getElementById('cash').textContent = params.get('efectivo');
+        document.getElementById('total').textContent = params.get('total');
+        document.getElementById('change').textContent = params.get('devueltas');
     </script>
 </body>
 </html>
