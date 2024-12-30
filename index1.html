@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Factura</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            font-size: 24px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Factura</h1>
+        <p>Los detalles del pedido son:</p>
+        <table>
+            <tr>
+                <th>Campo</th>
+                <th>Valor</th>
+            </tr>
+            <tbody id="factura">
+                <!-- Los datos se insertarán aquí dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Extraer los parámetros de la URL
+        const params = new URLSearchParams(window.location.search);
+        const facturaTable = document.getElementById('factura');
+
+        // Definir un orden de visualización para los parámetros
+        const order = [
+            'boleta', 'mesa', 'fecha', 'cantidades', 'servicios', 'p_unit', 
+            'total', 'descuento', 'subtotal_desc', 'estado', 
+            'fecha_entrega', 'domi', 'direccion', 'propina'
+        ];
+
+        // Mapeo de nombres amigables
+        const displayNames = {
+            boleta: 'Número de Boleta',
+            mesa: 'Cliente / Mesa',
+            fecha: 'Fecha del Pedido',
+            cantidades: 'Cantidades',
+            servicios: 'Servicios',
+            p_unit: 'Precios Unitarios',
+            total: 'Total',
+            descuento: 'Descuento',
+            subtotal_desc: 'Subtotal con Descuento',
+            estado: 'Estado del Pedido',
+            fecha_entrega: 'Hora de Entrega',
+            domi: 'Costo de Domicilio',
+            direccion: 'Dirección',
+            propina: 'Propina'
+        };
+
+        // Insertar los parámetros en la tabla
+        order.forEach(key => {
+            if (params.has(key)) {
+                const row = document.createElement('tr');
+                const keyCell = document.createElement('th');
+                const valueCell = document.createElement('td');
+                keyCell.textContent = displayNames[key] || key;
+                valueCell.textContent = params.get(key);
+                row.appendChild(keyCell);
+                row.appendChild(valueCell);
+                facturaTable.appendChild(row);
+            }
+        });
+    </script>
+</body>
+</html>
