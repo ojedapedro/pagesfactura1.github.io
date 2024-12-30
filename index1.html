@@ -49,6 +49,11 @@
             text-align: left;
             padding: 2px;
         }
+        .items td {
+            padding: 2px;
+            vertical-align: top;
+            white-space: pre-line;  /* Added this to preserve line breaks */
+        }
         .payment-info {
             text-align: left;
             font-weight: bold;
@@ -113,17 +118,27 @@
         // Get URL parameters
         const params = new URLSearchParams(window.location.search);
         
+        // Function to decode and preserve line breaks
+        function setContent(id, paramName) {
+            const element = document.getElementById(id);
+            const content = params.get(paramName);
+            if (content) {
+                // Decode the URL-encoded string and preserve line breaks
+                element.textContent = decodeURIComponent(content).replace(/\\n/g, '\n');
+            }
+        }
+        
         // Set content
         document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
-        document.getElementById('ticket').textContent = params.get('boleta');
-        document.getElementById('customer').textContent = params.get('mesa');
+        setContent('ticket', 'boleta');
+        setContent('customer', 'mesa');
         document.getElementById('date').textContent = params.get('fecha') || 'FECHA DE RECEPCION: 12/30/2024 16:35:49';
-        document.getElementById('quantity').textContent = params.get('cantidades');
-        document.getElementById('description').textContent = params.get('servicios');
-        document.getElementById('item-total').textContent = params.get('total');
-        document.getElementById('cash').textContent = params.get('efectivo');
-        document.getElementById('total').textContent = params.get('total');
-        document.getElementById('change').textContent = params.get('devueltas');
+        setContent('quantity', 'cantidades');
+        setContent('description', 'servicios');
+        setContent('item-total', 'total');
+        setContent('cash', 'efectivo');
+        setContent('total', 'total');
+        setContent('change', 'devueltas');
     </script>
 </body>
 </html>
