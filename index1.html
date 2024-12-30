@@ -3,102 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle de Factura</title>
+    <title>Ticket</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        h1 {
-            color: #333;
-            font-size: 24px;
             text-align: center;
+            margin: 0;
+            padding: 0;
+            background: #fff;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .ticket {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .logo {
+            width: 150px;
+            margin: 0 auto 20px;
+        }
+        h1, h2, p {
+            margin: 10px 0;
+        }
+        .details {
+            text-align: left;
             margin-top: 20px;
         }
-        table, th, td {
-            border: 1px solid #ddd;
+        .details p {
+            margin: 5px 0;
         }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #f4f4f4;
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Factura</h1>
-        <p>Los detalles del pedido son:</p>
-        <table>
-            <tr>
-                <th>Campo</th>
-                <th>Valor</th>
-            </tr>
-            <tbody id="factura">
-                <!-- Los datos se insertarán aquí dinámicamente -->
-            </tbody>
-        </table>
+    <div class="ticket">
+        <img src="logo.png" alt="Logo" class="logo">
+        <h1>Q'Hubo Mon Cocktails</h1>
+        <p>Nit: Domicilios 304 4430427 / Mistares Etapa 2<br>Frente Bourbon</p>
+        <h2 id="ticket"></h2>
+        <h3 id="cliente"></h3>
+        <p id="fecha"></p>
+        <div class="details">
+            <p><b>Cant</b>: <span id="cant"></span></p>
+            <p><b>Descripción</b>: <span id="desc"></span></p>
+            <p><b>Total</b>: <span id="total"></span></p>
+        </div>
+        <div class="total">
+            EFECTIVO: <span id="efectivo"></span><br>
+            DEVUELTAS: <span id="devueltas"></span>
+        </div>
+        <p><b>DEUDOR</b></p>
+        <p>Facturas AutoSystem<br>Contactos: +57 315 820 8619<br>Síguenos en redes sociales como @AutoSystem</p>
     </div>
 
     <script>
-        // Extraer los parámetros de la URL
+        // Extraer los datos de la URL
         const params = new URLSearchParams(window.location.search);
-        const facturaTable = document.getElementById('factura');
 
-        // Definir un orden de visualización para los parámetros
-        const order = [
-            'boleta', 'mesa', 'fecha', 'cantidades', 'servicios', 'p_unit', 
-            'total', 'descuento', 'subtotal_desc', 'estado', 
-            'fecha_entrega', 'domi', 'direccion', 'propina'
-        ];
-
-        // Mapeo de nombres amigables
-        const displayNames = {
-            boleta: 'Número de Boleta',
-            mesa: 'Cliente / Mesa',
-            fecha: 'Fecha del Pedido',
-            cantidades: 'Cantidades',
-            servicios: 'Servicios',
-            p_unit: 'Precios Unitarios',
-            total: 'Total',
-            descuento: 'Descuento',
-            subtotal_desc: 'Subtotal con Descuento',
-            estado: 'Estado del Pedido',
-            fecha_entrega: 'Hora de Entrega',
-            domi: 'Costo de Domicilio',
-            direccion: 'Dirección',
-            propina: 'Propina'
-        };
-
-        // Insertar los parámetros en la tabla
-        order.forEach(key => {
-            if (params.has(key)) {
-                const row = document.createElement('tr');
-                const keyCell = document.createElement('th');
-                const valueCell = document.createElement('td');
-                keyCell.textContent = displayNames[key] || key;
-                valueCell.textContent = params.get(key);
-                row.appendChild(keyCell);
-                row.appendChild(valueCell);
-                facturaTable.appendChild(row);
-            }
-        });
+        // Rellenar datos en el ticket
+        document.getElementById('ticket').textContent = params.get('boleta') || '---';
+        document.getElementById('cliente').textContent = params.get('mesa') || '---';
+        document.getElementById('fecha').textContent = `Fecha de Recepción: ${params.get('fecha') || '---'} ${params.get('fecha_entrega') || ''}`;
+        document.getElementById('cant').textContent = params.get('cantidades') || '---';
+        document.getElementById('desc').textContent = params.get('servicios') || '---';
+        document.getElementById('total').textContent = params.get('total') || '---';
+        document.getElementById('efectivo').textContent = params.get('descuento') || '---';
+        document.getElementById('devueltas').textContent = params.get('subtotal_desc') || '---';
     </script>
 </body>
 </html>
