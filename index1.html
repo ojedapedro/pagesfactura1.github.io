@@ -5,15 +5,130 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket de Venta</title>
     <style>
-        /* Previous styles remain unchanged */
-        .items th:nth-child(1), .items td:nth-child(1) { width: 15%; text-align: center; }
-        .items th:nth-child(2), .items td:nth-child(2) { width: 40%; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            line-height: 1.2;
+        }
+        .ticket {
+            max-width: 300px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 10px;
+            object-fit: contain;
+        }
+        .header-text {
+            font-size: 12px;
+            margin: 5px 0;
+            color: #333;
+        }
+        .ticket-number {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0;
+            background: #f8f8f8;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        .customer-name {
+            font-size: 16px;
+            margin: 10px 0;
+            font-weight: bold;
+            color: #444;
+        }
+        .date {
+            font-size: 12px;
+            margin: 5px 0;
+            color: #666;
+        }
+        .items {
+            width: 100%;
+            text-align: left;
+            margin: 15px 0;
+            font-size: 12px;
+            border-collapse: collapse;
+        }
+        .items th {
+            text-align: left;
+            padding: 5px;
+            background: #f5f5f5;
+            border-bottom: 2px solid #ddd;
+        }
+        .items td {
+            padding: 5px;
+            vertical-align: top;
+            border-bottom: 1px solid #eee;
+        }
+        .items th:nth-child(1), .items td:nth-child(1) {
+            width: 15%;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .items th:nth-child(2), .items td:nth-child(2) {
+            width: 40%;
+        }
         .items th:nth-child(3), .items td:nth-child(3),
-        .items th:nth-child(4), .items td:nth-child(4) { width: 22.5%; text-align: right; }
+        .items th:nth-child(4), .items td:nth-child(4) {
+            width: 22.5%;
+            text-align: right;
+        }
+        .payment-info {
+            text-align: left;
+            font-weight: bold;
+            margin: 15px 0;
+            font-size: 14px;
+            border-top: 2px solid #eee;
+            padding-top: 10px;
+        }
+        .payment-info p {
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        .important {
+            margin: 10px 0;
+            font-weight: bold;
+            color: #d32f2f;
+            text-transform: uppercase;
+        }
+        @media print {
+            body {
+                padding: 0;
+            }
+            .ticket {
+                box-shadow: none;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="ticket">
+        <img src="/api/placeholder/100/100" alt="True Colors" class="logo">
+        <p class="header-text">Nit: <span id="nit"></span></p>
+        <p class="header-text">10A Calle 0-78, Cdad. de Guatemala</p>
+        <p class="header-text">Apart-Hotel Posada San Judas</p>
+        <p class="header-text">Teléfono: <span id="phone"></span></p>
+        <p class="header-text">TICKET:</p>
+        <p class="ticket-number" id="ticket"></p>
+        <p class="customer-name" id="customer"></p>
+        <p class="date" id="date"></p>
+        
         <table class="items">
             <thead>
                 <tr>
@@ -25,33 +140,68 @@
             </thead>
             <tbody id="items-container"></tbody>
         </table>
+
+        <div class="payment-info">
+            <p>EFECTIVO: <span id="cash"></span></p>
+            <p>TOTAL: <span id="total"></span></p>
+            <p>CAMBIO: <span id="change"></span></p>
+        </div>
+
+        <p class="important" id="estado"></p>
+        <p class="important">IMPORTANTE:</p>
+        
+        <div class="footer">
+            <p>Facturas AutoSystem</p>
+            <p>Contactos: <a href="tel:+573158208619">+57 315 820 8619</a></p>
+            <p>Síguenos en redes sociales como<br>@AutoSystem</p>
+        </div>
     </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
-        
-        const cantidades = (params.get('cantidades') || '').split(',');
-        const servicios = (params.get('servicios') || '').split(',');
-        const precios = (params.get('p_unit') || '').split(',');
+
+        // Set fixed content
+        document.getElementById('nit').textContent = '2825515-1';
+        document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
+        document.getElementById('ticket').textContent = params.get('boleta') || 'Sin número';
+        document.getElementById('customer').textContent = params.get('mesa') || 'Cliente General';
+
+        // Formatear fecha
+        const now = new Date();
+        const dateStr = params.get('fecha') || `FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
+        document.getElementById('date').textContent = dateStr;
+
+        // Handle items
+        const cantidades = params.get('cantidades') ? params.get('cantidades').split(',') : [];
+        const servicios = params.get('servicios') ? params.get('servicios').split(',') : [];
+        const precios = params.get('p_unit') ? params.get('p_unit').split(',') : [];
         const itemsContainer = document.getElementById('items-container');
 
         for (let i = 0; i < cantidades.length; i++) {
-            const cantidad = parseFloat(cantidades[i] || 0);
-            const servicio = servicios[i]?.trim() || 'Sin descripción';
-            const precio = parseFloat(precios[i] || 0);
-            const precioTotal = (cantidad * precio).toFixed(2);
+            const cantidad = cantidades[i] ? parseInt(cantidades[i].trim()) : 0;
+            const servicio = servicios[i] ? servicios[i].trim() : 'Sin descripción';
+            const precio = precios[i] ? parseFloat(precios[i].trim()) : 0;
+            const precioTotal = cantidad * precio;
 
             if (cantidad > 0) {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${cantidad}</td>
                     <td>${servicio}</td>
-                    <td>${precio.toFixed(2)}</td>
+                    <td>${precio}</td>
                     <td>${precioTotal}</td>
                 `;
                 itemsContainer.appendChild(tr);
             }
         }
+
+        // Valores de efectivo, total y cambio
+        document.getElementById('cash').textContent = params.get('efectivo') || '0.00';
+        document.getElementById('total').textContent = params.get('total') || '0.00';
+        document.getElementById('change').textContent = params.get('devueltas') || '0.00';
+
+        // Estado dinámico
+        document.getElementById('estado').textContent = params.get('estado') || 'Sin estado';
     </script>
 </body>
 </html>
