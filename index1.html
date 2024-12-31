@@ -176,12 +176,16 @@
         const itemsContainer = document.getElementById('items-container');
 
         for (let i = 0; i < cantidades.length; i++) {
-            if (cantidades[i].trim()) {
+            const cantidad = cantidades[i] ? cantidades[i].trim() : '0';
+            const servicio = servicios[i] ? servicios[i].trim() : 'Sin descripción';
+            const precio = precios[i] ? precios[i].trim() : '0.00';
+
+            if (cantidad !== '0') {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${cantidades[i].trim()}</td>
-                    <td>${servicios[i] ? servicios[i].trim() : ''}</td>
-                    <td>${precios[i] ? precios[i].trim() : '0.00'}</td>
+                    <td>${cantidad}</td>
+                    <td>${servicio}</td>
+                    <td>Q${precio}</td>
                 `;
                 itemsContainer.appendChild(tr);
             }
