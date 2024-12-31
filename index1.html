@@ -60,6 +60,8 @@
             font-weight: bold;
             margin: 15px 0;
             font-size: 14px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
         }
         .payment-info p {
             margin: 5px 0;
@@ -90,7 +92,7 @@
             <tr>
                 <th>Cant</th>
                 <th>Descripcion</th>
-                <th>Total</th>
+                <th>Precio</th>
             </tr>
             <tbody id="items-container"></tbody>
         </table>
@@ -123,7 +125,7 @@
         // Handle items with line breaks
         const cantidades = (params.get('cantidades') || '').split(',');
         const servicios = (params.get('servicios') || '').split(',');
-        const totales = (params.get('total') || '').split(',');
+        const precios = (params.get('p_unit') || '').split(',');
         
         const itemsContainer = document.getElementById('items-container');
         
@@ -134,7 +136,7 @@
                 tr.innerHTML = `
                     <td>${cantidades[i].trim()}</td>
                     <td>${servicios[i] ? servicios[i].trim() : ''}</td>
-                    <td>${totales[i] ? totales[i].trim() : ''}</td>
+                    <td>${precios[i] ? precios[i].trim() : ''}</td>
                 `;
                 itemsContainer.appendChild(tr);
             }
