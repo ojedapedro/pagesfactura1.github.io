@@ -183,28 +183,38 @@
         
         const itemsContainer = document.getElementById('items-container');
         
-        // Crear una fila para cada producto
-        for (let i = 0; i < cantidades.length; i++) {
-            if (cantidades[i].trim()) {
-                const tr = document.createElement('tr');
-                const precio = parseFloat(precios[i].replace(/[^\d.-]/g, '')) || 0; // Eliminar cualquier carácter no numérico
-                tr.innerHTML = `
-                    <td>${cantidades[i].trim()}</td>
-                    <td>${servicios[i] ? servicios[i].trim() : ''}</td>
-                    <td style="text-align: right;">${formatCurrency(precio)}</td>
-                `;
-                itemsContainer.appendChild(tr);
-            }
+      // Crear una fila para cada producto
+for (let i = 0; i < cantidades.length; i++) {
+    if (cantidades[i].trim()) {
+        const tr = document.createElement('tr');
+        
+        // Asegúrate de que el precio sea un número válido
+        const precio = parseFloat(precios[i].replace(/[^\d.-]/g, '').trim()) || 0; 
+        
+        // Si el precio sigue siendo NaN, asigna 0 como valor por defecto
+        if (isNaN(precio)) {
+            console.warn(`El precio para el producto en la fila ${i + 1} es inválido. Se asigna precio 0.`);
+            precio = 0;
         }
 
-        // Formatear valores monetarios
-        const efectivo = parseFloat(params.get('efectivo')) || 0;
-        const total = parseFloat(params.get('total')) || 0;
-        const cambio = parseFloat(params.get('devueltas')) || 0;
+        tr.innerHTML = `
+            <td>${cantidades[i].trim()}</td>
+            <td>${servicios[i] ? servicios[i].trim() : ''}</td>
+            <td style="text-align: right;">${formatCurrency(precio)}</td>
+        `;
+        itemsContainer.appendChild(tr);
+    }
+}
 
-        document.getElementById('cash').textContent = formatCurrency(efectivo);
-        document.getElementById('total').textContent = formatCurrency(total);
-        document.getElementById('change').textContent = formatCurrency(cambio);
+// Formatear valores monetarios
+const efectivo = parseFloat(params.get('efectivo')) || 0;
+const total = parseFloat(params.get('total')) || 0;
+const cambio = parseFloat(params.get('devueltas')) || 0;
+
+document.getElementById('cash').textContent = formatCurrency(efectivo);
+document.getElementById('total').textContent = formatCurrency(total);
+document.getElementById('change').textContent = formatCurrency(cambio);
+
     </script>
 </body>
 </html>
