@@ -93,6 +93,7 @@
                 <th>Cant</th>
                 <th>Descripcion</th>
                 <th>Precio</th>
+                <th>Total</th>
             </tr>
             <tbody id="items-container"></tbody>
         </table>
@@ -132,11 +133,16 @@
         // Create a row for each item
         for (let i = 0; i < cantidades.length; i++) {
             if (cantidades[i].trim()) {  // Only create row if there's a quantity
+                const cantidad = parseFloat(cantidades[i].trim());
+                const precio = parseFloat(precios[i].trim().replace(/[^0-9.-]+/g, ''));
+                const total = cantidad * precio;
+                
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${cantidades[i].trim()}</td>
                     <td>${servicios[i] ? servicios[i].trim() : ''}</td>
                     <td>${precios[i] ? precios[i].trim() : ''}</td>
+                    <td>${total.toFixed(2)}</td>
                 `;
                 itemsContainer.appendChild(tr);
             }
