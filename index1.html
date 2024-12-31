@@ -55,7 +55,7 @@
             margin: 15px 0;
             font-size: 12px;
             border-collapse: separate;
-            border-spacing: 0 8px;
+            border-spacing: 0 4px;  /* Reduce spacing between rows */
         }
         .items th {
             text-align: left;
@@ -69,10 +69,10 @@
             border-bottom: 1px solid #eee;
         }
         .items th:nth-child(1), .items td:nth-child(1) {
-            width: 50%;
+            width: 30%;  /* Reduce width of 'Cant' column */
         }
         .items th:nth-child(2), .items td:nth-child(2) {
-            width: 50%;
+            width: 70%;  /* Increase width of 'Descripción' column */
         }
         .payment-info {
             text-align: left;
@@ -188,4 +188,3 @@
     </script>
 </body>
 </html>
-
