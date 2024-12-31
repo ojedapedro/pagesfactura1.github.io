@@ -44,6 +44,8 @@
             text-align: left;
             margin: 15px 0;
             font-size: 12px;
+            border-collapse: separate;
+            border-spacing: 0 8px;
         }
         .items th {
             text-align: left;
@@ -52,7 +54,6 @@
         .items td {
             padding: 2px;
             vertical-align: top;
-            white-space: pre-line;  /* Added this to preserve line breaks */
         }
         .payment-info {
             text-align: left;
@@ -91,11 +92,7 @@
                 <th>Descripcion</th>
                 <th>Total</th>
             </tr>
-            <tr>
-                <td id="quantity"></td>
-                <td id="description"></td>
-                <td id="item-total"></td>
-            </tr>
+            <tbody id="items-container"></tbody>
         </table>
 
         <div class="payment-info">
@@ -115,30 +112,38 @@
     </div>
 
     <script>
-        // Get URL parameters
         const params = new URLSearchParams(window.location.search);
         
-        // Function to decode and preserve line breaks
-        function setContent(id, paramName) {
-            const element = document.getElementById(id);
-            const content = params.get(paramName);
-            if (content) {
-                // Decode the URL-encoded string and preserve line breaks
-                element.textContent = decodeURIComponent(content).replace(/\\n/g, '\n');
+        // Set fixed content
+        document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
+        document.getElementById('ticket').textContent = params.get('boleta');
+        document.getElementById('customer').textContent = params.get('mesa');
+        document.getElementById('date').textContent = params.get('fecha') || 'FECHA DE RECEPCION: 12/30/2024 16:35:49';
+        
+        // Handle items with line breaks
+        const cantidades = (params.get('cantidades') || '').split(',');
+        const servicios = (params.get('servicios') || '').split(',');
+        const totales = (params.get('total') || '').split(',');
+        
+        const itemsContainer = document.getElementById('items-container');
+        
+        // Create a row for each item
+        for (let i = 0; i < cantidades.length; i++) {
+            if (cantidades[i].trim()) {  // Only create row if there's a quantity
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${cantidades[i].trim()}</td>
+                    <td>${servicios[i] ? servicios[i].trim() : ''}</td>
+                    <td>${totales[i] ? totales[i].trim() : ''}</td>
+                `;
+                itemsContainer.appendChild(tr);
             }
         }
-        
-        // Set content
-        document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
-        setContent('ticket', 'boleta');
-        setContent('customer', 'mesa');
-        document.getElementById('date').textContent = params.get('fecha') || 'FECHA DE RECEPCION: 12/30/2024 16:35:49';
-        setContent('quantity', 'cantidades');
-        setContent('description', 'servicios');
-        setContent('item-total', 'total');
-        setContent('cash', 'efectivo');
-        setContent('total', 'total');
-        setContent('change', 'devueltas');
+
+        document.getElementById('cash').textContent = params.get('efectivo');
+        document.getElementById('total').textContent = params.get('total');
+        document.getElementById('change').textContent = params.get('devueltas');
     </script>
 </body>
 </html>
+
