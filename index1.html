@@ -73,10 +73,10 @@
             vertical-align: middle;
         }
         .items th:nth-child(2), .items td:nth-child(2) {
-            width: 55%;
+            width: 70%;
         }
         .items th:nth-child(3), .items td:nth-child(3) {
-            width: 30%;
+            width: 15%;
             text-align: right;
         }
         .payment-info {
@@ -185,7 +185,7 @@
                 tr.innerHTML = `
                     <td>${cantidad}</td>
                     <td>${servicio}</td>
-                    <td>Q${precio}</td>
+                    <td>${precio}</td>
                 `;
                 itemsContainer.appendChild(tr);
             }
