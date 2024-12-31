@@ -130,8 +130,8 @@
         // Get and clean the arrays
         const cantidades = (params.get('cantidades') || '').split(',').map(item => item.trim());
         const servicios = (params.get('servicios') || '').split(',').map(item => item.trim());
-        const precios = (params.get('precios') || '').split(',').map(item => item.trim());
-        const totales = (params.get('totales') || '').split(',').map(item => item.trim());
+        const precios = (params.get('p_unit') || '').split(',').map(item => item.trim());
+        const totales = (params.get('total') || '').split(',').map(item => item.trim());
 
         // Process items only if we have valid data
         const maxLength = Math.max(cantidades.length, servicios.length, precios.length, totales.length);
