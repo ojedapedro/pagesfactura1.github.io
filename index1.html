@@ -5,67 +5,142 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket</title>
     <style>
-        /* [Previous styles remain the same] */
-        .items td {
-            padding: 2px 10px 2px 2px; /* Añadido padding derecho para alinear números */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #fff;
+            line-height: 1.2;
         }
-        .items td:nth-child(1),
-        .items td:nth-child(3),
-        .items td:nth-child(4) {
-            text-align: right; /* Alinear números a la derecha */
+        .ticket {
+            max-width: 300px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 10px;
+        }
+        .header-text {
+            font-size: 12px;
+            margin: 5px 0;
+        }
+        .ticket-number {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .customer-name {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .date {
+            font-size: 12px;
+            margin: 5px 0;
+        }
+        .items {
+            width: 100%;
+            text-align: left;
+            margin: 15px 0;
+            font-size: 12px;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+        .items th {
+            text-align: left;
+            padding: 2px;
+        }
+        .items td {
+            padding: 2px;
+            vertical-align: top;
+        }
+        .payment-info {
+            text-align: left;
+            font-weight: bold;
+            margin: 15px 0;
+            font-size: 14px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+        .payment-info p {
+            margin: 5px 0;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            text-align: center;
+        }
+        .important {
+            margin: 10px 0;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="ticket">
-        <!-- [Previous HTML structure remains the same until the script] -->
+        <img src="/api/placeholder/100/100" alt="True Colors" class="logo">
+        <p class="header-text">Nit:</p>
+        <p class="header-text">Domicilios <span id="phone"></span> / Mistares Etapa 2</p>
+        <p class="header-text">Frente Bourboun</p>
+        <p class="header-text">TICKET:</p>
+        <p class="ticket-number" id="ticket"></p>
+        <p class="customer-name" id="customer"></p>
+        <p class="date" id="date"></p>
+        
         <table class="items">
             <tr>
-                <th style="text-align: right">Cant</th>
-                <th style="text-align: left">Descripcion</th>
-                <th style="text-align: right">Precio</th>
-                <th style="text-align: right">Total</th>
+                <th>Cant</th>
+                <th>Descripcion</th>
+                <th>Precio</th>
             </tr>
             <tbody id="items-container"></tbody>
         </table>
-        <!-- [Rest of the HTML remains the same] -->
+
+        <div class="payment-info">
+            <p>EFECTIVO: <span id="cash"></span></p>
+            <p>TOTAL: <span id="total"></span></p>
+            <p>DEVUELTAS: <span id="change"></span></p>
+        </div>
+
+        <p class="important">DEUDOR</p>
+        <p class="important">IMPORTANTE:</p>
+        
+        <div class="footer">
+            <p>Facturas AutoSystem</p>
+            <p>Contactos: +57 315 820 8619</p>
+            <p>Síguenos en redes sociales como<br>@AutoSystem</p>
+        </div>
     </div>
 
     <script>
         const params = new URLSearchParams(window.location.search);
         
+        // Set fixed content
         document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
         document.getElementById('ticket').textContent = params.get('boleta');
         document.getElementById('customer').textContent = params.get('mesa');
         document.getElementById('date').textContent = params.get('fecha') || 'FECHA DE RECEPCION: 12/30/2024 16:35:49';
         
-        function getNumericPrice(price) {
-            if (!price) return 0;
-            return parseFloat(price.replace('Q', '').replace(/\s/g, '')) || 0;
-        }
-
+        // Handle items with line breaks
         const cantidades = (params.get('cantidades') || '').split(',');
         const servicios = (params.get('servicios') || '').split(',');
         const precios = (params.get('p_unit') || '').split(',');
         
         const itemsContainer = document.getElementById('items-container');
         
-        cantidades.forEach((cantidad, i) => {
-            if (cantidad.trim()) {
-                const cantidadNum = parseInt(cantidad.trim());
-                const precioNum = getNumericPrice(precios[i]);
-                const total = cantidadNum * precioNum;
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${cantidad.trim()}</td>
+        // Create a row for each item
+        for (let i = 0; i < cantidades.length; i++) {
+            if (cantidades[i].trim()) {  // Only create row if there's a quantity
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${cantidades[i].trim()}</td>
                     <td>${servicios[i] ? servicios[i].trim() : ''}</td>
                     <td>${precios[i] ? precios[i].trim() : ''}</td>
-                    <td>Q${total.toFixed(1)}</td>
                 `;
-                itemsContainer.appendChild(row);
+                itemsContainer.appendChild(tr);
             }
-        });
+        }
 
         document.getElementById('cash').textContent = params.get('efectivo');
         document.getElementById('total').textContent = params.get('total');
