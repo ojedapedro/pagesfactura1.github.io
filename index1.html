@@ -44,25 +44,16 @@
             text-align: left;
             margin: 15px 0;
             font-size: 12px;
-            border-collapse: separate;
-            border-spacing: 0 8px;
         }
         .items th {
             text-align: left;
             padding: 2px;
-        }
-        .items td {
-            padding: 2px;
-            vertical-align: top;
-            white-space: pre-line; /* This helps preserve line breaks */
         }
         .payment-info {
             text-align: left;
             font-weight: bold;
             margin: 15px 0;
             font-size: 14px;
-            border-top: 1px solid #ccc;
-            padding-top: 10px;
         }
         .payment-info p {
             margin: 5px 0;
@@ -93,10 +84,13 @@
             <tr>
                 <th>Cant</th>
                 <th>Descripcion</th>
-                <th>Precio</th>
                 <th>Total</th>
             </tr>
-            <tbody id="items-container"></tbody>
+            <tr>
+                <td id="quantity"></td>
+                <td id="description"></td>
+                <td id="item-total"></td>
+            </tr>
         </table>
 
         <div class="payment-info">
@@ -116,50 +110,20 @@
     </div>
 
     <script>
+        // Get URL parameters
         const params = new URLSearchParams(window.location.search);
         
-        // Set fixed content
+        // Set content
         document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
         document.getElementById('ticket').textContent = params.get('boleta');
         document.getElementById('customer').textContent = params.get('mesa');
         document.getElementById('date').textContent = params.get('fecha') || 'FECHA DE RECEPCION: 12/30/2024 16:35:49';
-        
-        // Improved item handling
-        const itemsContainer = document.getElementById('items-container');
-        
-        // Get and clean the arrays
-        const cantidades = (params.get('cantidades') || '').split(',').map(item => item.trim());
-        const servicios = (params.get('servicios') || '').split(',').map(item => item.trim());
-        const precios = (params.get('p_unit') || '').split(',').map(item => item.trim());
-        const totales = (params.get('total') || '').split(',').map(item => item.trim());
-
-        // Process items only if we have valid data
-        const maxLength = Math.max(cantidades.length, servicios.length, precios.length, totales.length);
-        
-        for (let i = 0; i < maxLength; i++) {
-            if (cantidades[i] || servicios[i]) {  // Create row if we have either quantity or service
-                const tr = document.createElement('tr');
-                
-                // Format price and total with proper currency symbol and decimal places
-                const precio = precios[i] ? `Q${parseFloat(precios[i] || 0).toFixed(2)}` : 'Q0.00';
-                const total = totales[i] ? `Q${parseFloat(totales[i] || 0).toFixed(2)}` : 'Q0.00';
-                
-                tr.innerHTML = `
-                    <td>${cantidades[i] || ''}</td>
-                    <td>${servicios[i] || ''}</td>
-                    <td>${precio}</td>
-                    <td>${total}</td>
-                `;
-                itemsContainer.appendChild(tr);
-            }
-        }
-
-        // Format currency values in payment info
-        const formatCurrency = (value) => value ? `Q${parseFloat(value).toFixed(2)}` : 'Q0.00';
-        
-        document.getElementById('cash').textContent = formatCurrency(params.get('efectivo'));
-        document.getElementById('total').textContent = formatCurrency(params.get('total'));
-        document.getElementById('change').textContent = formatCurrency(params.get('devueltas'));
+        document.getElementById('quantity').textContent = params.get('cantidades');
+        document.getElementById('description').textContent = params.get('servicios');
+        document.getElementById('item-total').textContent = params.get('total');
+        document.getElementById('cash').textContent = params.get('efectivo');
+        document.getElementById('total').textContent = params.get('total');
+        document.getElementById('change').textContent = params.get('devueltas');
     </script>
 </body>
 </html>
