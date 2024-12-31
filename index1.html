@@ -134,8 +134,8 @@
                 <tr>
                     <th>Cant</th>
                     <th>Descripción</th>
-                    <th>Precio</th>
-                    <th>Precio Total</th>
+                    <th>Precio Unit</th>
+                    <th>Total</th>
                 </tr>
             </thead>
             <tbody id="items-container"></tbody>
@@ -178,18 +178,18 @@
         const itemsContainer = document.getElementById('items-container');
 
         for (let i = 0; i < cantidades.length; i++) {
-            const cantidad = cantidades[i] ? cantidades[i].trim() : '0';
-            const servicio = servicios[i] ? servicios[i].trim() : 'Sin descripción';
-            const precio = precios[i] ? precios[i].trim() : '0.00';
-            const precioTotal = parseFloat(cantidad) * parseFloat(precio);
+            const cantidad = parseFloat(cantidades[i]?.trim()) || 0;
+            const servicio = servicios[i]?.trim() || 'Sin descripción';
+            const precio = parseFloat(precios[i]?.trim()) || 0;
+            const precioTotal = cantidad * precio;
 
-            if (cantidad !== '0') {
+            if (cantidad > 0) {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${cantidad}</td>
                     <td>${servicio}</td>
-                    <td>${precio}</td>
-                    <td>${isNaN(precioTotal) ? '0.00' : precioTotal.toFixed(2)}</td>
+                    <td>Q${precio.toFixed(2)}</td>
+                    <td>Q${precioTotal.toFixed(2)}</td>
                 `;
                 itemsContainer.appendChild(tr);
             }
