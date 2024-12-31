@@ -123,24 +123,27 @@
         document.getElementById('date').textContent = params.get('fecha') || 'FECHA DE RECEPCION: 12/30/2024 16:35:49';
         
         // Handle items with line breaks
-        const cantidades = (params.get('cantidades') || '').split(',');
-        const servicios = (params.get('servicios') || '').split(',');
-        const precios = (params.get('p_unit') || '').split(',');
-        
-        const itemsContainer = document.getElementById('items-container');
-        
-        // Create a row for each item
-        for (let i = 0; i < cantidades.length; i++) {
-            if (cantidades[i].trim()) {  // Only create row if there's a quantity
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${cantidades[i].trim()}</td>
-                    <td>${servicios[i] ? servicios[i].trim() : ''}</td>
-                    <td>${precios[i] ? precios[i].trim() : ''}</td>
-                `;
-                itemsContainer.appendChild(tr);
-            }
-        }
+     const cantidades = (params.get('cantidades') || '').split(',');
+const servicios = (params.get('servicios') || '').split(',');
+const precios = (params.get('precios') || '').split(',');
+const totales = (params.get('totales') || '').split(',');
+
+const itemsContainer = document.getElementById('items-container');
+
+// Crear una fila por cada ítem asegurando datos consistentes
+for (let i = 0; i < cantidades.length; i++) {
+    if (cantidades[i].trim() && servicios[i]) {  // Solo crear filas si hay cantidad y servicio
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${cantidades[i].trim()}</td>
+            <td>${servicios[i].trim()}</td>
+            <td>Q${precios[i] ? precios[i].trim() : '0.00'}</td>
+            <td>Q${totales[i] ? totales[i].trim() : '0.00'}</td>
+        `;
+        itemsContainer.appendChild(tr);
+    }
+}
+
 
         document.getElementById('cash').textContent = params.get('efectivo');
         document.getElementById('total').textContent = params.get('total');
