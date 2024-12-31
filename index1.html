@@ -181,14 +181,11 @@
             }
         }
 
-        // Formatear valores monetarios
-        const efectivo = parseFloat(params.get('efectivo')) || 0;
-        const total = parseFloat(params.get('total')) || 0;
-        const cambio = parseFloat(params.get('devueltas')) || 0;
-
-        document.getElementById('cash').textContent = new Intl.NumberFormat('es-GT', { style: 'currency', currency: 'GTQ' }).format(efectivo);
-        document.getElementById('total').textContent = new Intl.NumberFormat('es-GT', { style: 'currency', currency: 'GTQ' }).format(total);
-        document.getElementById('change').textContent = new Intl.NumberFormat('es-GT', { style: 'currency', currency: 'GTQ' }).format(cambio);
+        // Establecer valores sin formatear
+        document.getElementById('cash').textContent = params.get('efectivo') || '0.00';
+        document.getElementById('total').textContent = params.get('total') || '0.00';
+        document.getElementById('change').textContent = params.get('devueltas') || '0.00';
     </script>
 </body>
 </html>
+
