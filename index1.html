@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es"> <!-- Cambiado a español ya que el contenido está en español -->
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -164,7 +164,7 @@
                 currency: 'GTQ'
             }).format(amount);
         };
-        
+
         // Set fixed content
         document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
         document.getElementById('ticket').textContent = params.get('boleta') || 'Sin número';
@@ -187,7 +187,7 @@
         for (let i = 0; i < cantidades.length; i++) {
             if (cantidades[i].trim()) {
                 const tr = document.createElement('tr');
-                const precio = precios[i] ? parseFloat(precios[i].trim()) : 0;
+                const precio = parseFloat(precios[i].replace(/Q/g, '').replace(/,/g, '')) || 0; // Remove 'Q' and ',' and parse to float
                 tr.innerHTML = `
                     <td>${cantidades[i].trim()}</td>
                     <td>${servicios[i] ? servicios[i].trim() : ''}</td>
@@ -208,3 +208,4 @@
     </script>
 </body>
 </html>
+
