@@ -72,7 +72,7 @@
             width: 20%;
         }
         .items th:nth-child(2), .items td:nth-child(2) {
-            width: 30%;
+            width: 60%;
         }
         .items th:nth-child(3), .items td:nth-child(3) {
             width: 20%;
@@ -183,11 +183,11 @@
         
         const itemsContainer = document.getElementById('items-container');
         
-        // Create a row for each item
+        // Crear una fila para cada producto
         for (let i = 0; i < cantidades.length; i++) {
             if (cantidades[i].trim()) {
                 const tr = document.createElement('tr');
-                const precio = parseFloat(precios[i].replace(/Q/g, '').replace(/,/g, '')) || 0; // Remove 'Q' and ',' and parse to float
+                const precio = parseFloat(precios[i].replace(/[^\d.-]/g, '')) || 0; // Eliminar cualquier carácter no numérico
                 tr.innerHTML = `
                     <td>${cantidades[i].trim()}</td>
                     <td>${servicios[i] ? servicios[i].trim() : ''}</td>
