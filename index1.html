@@ -54,14 +54,13 @@
         .items td {
             padding: 2px;
             vertical-align: top;
+            white-space: pre-line;  /* Added this to preserve line breaks */
         }
         .payment-info {
             text-align: left;
             font-weight: bold;
             margin: 15px 0;
             font-size: 14px;
-            border-top: 1px solid #ccc;
-            padding-top: 10px;
         }
         .payment-info p {
             margin: 5px 0;
@@ -87,12 +86,17 @@
         <p class="ticket-number" id="ticket"></p>
         <p class="customer-name" id="customer"></p>
         <p class="date" id="date"></p>
-        
+
         <table class="items">
             <tr>
                 <th>Cant</th>
                 <th>Descripcion</th>
-                <th>Precio</th>
+                <th>Total</th>
+            </tr>
+            <tr>
+                <td id="quantity"></td>
+                <td id="description"></td>
+                <td id="item-total"></td>
             </tr>
             <tbody id="items-container"></tbody>
         </table>
@@ -105,7 +109,7 @@
 
         <p class="important">DEUDOR</p>
         <p class="important">IMPORTANTE:</p>
-        
+
         <div class="footer">
             <p>Facturas AutoSystem</p>
             <p>Contactos: +57 315 820 8619</p>
@@ -114,18 +118,38 @@
     </div>
 
     <script>
+        // Get URL parameters
         const params = new URLSearchParams(window.location.search);
+
+        // Function to decode and preserve line breaks
+        function setContent(id, paramName) {
+            const element = document.getElementById(id);
+            const content = params.get(paramName);
+            if (content) {
+                // Decode the URL-encoded string and preserve line breaks
+                element.textContent = decodeURIComponent(content).replace(/\\n/g, '\n');
+            }
+        }
         
+        // Set content
         // Set fixed content
         document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
+        setContent('ticket', 'boleta');
+        setContent('customer', 'mesa');
         document.getElementById('ticket').textContent = params.get('boleta');
         document.getElementById('customer').textContent = params.get('mesa');
         document.getElementById('date').textContent = params.get('fecha') || 'FECHA DE RECEPCION: 12/30/2024 16:35:49';
+        setContent('quantity', 'cantidades');
+        setContent('description', 'servicios');
+        setContent('item-total', 'total');
+        setContent('cash', 'efectivo');
+        setContent('total', 'total');
+        setContent('change', 'devueltas');
         
         // Handle items with line breaks
         const cantidades = (params.get('cantidades') || '').split(',');
         const servicios = (params.get('servicios') || '').split(',');
-        const precios = (params.get('p_unit') || '').split(',');
+        const totales = (params.get('total') || '').split(',');
         
         const itemsContainer = document.getElementById('items-container');
         
@@ -136,12 +160,11 @@
                 tr.innerHTML = `
                     <td>${cantidades[i].trim()}</td>
                     <td>${servicios[i] ? servicios[i].trim() : ''}</td>
-                    <td>${precios[i] ? precios[i].trim() : ''}</td>
+                    <td>${totales[i] ? totales[i].trim() : ''}</td>
                 `;
                 itemsContainer.appendChild(tr);
             }
         }
-
         document.getElementById('cash').textContent = params.get('efectivo');
         document.getElementById('total').textContent = params.get('total');
         document.getElementById('change').textContent = params.get('devueltas');
