@@ -69,14 +69,10 @@
             border-bottom: 1px solid #eee;
         }
         .items th:nth-child(1), .items td:nth-child(1) {
-            width: 20%;
+            width: 50%;
         }
         .items th:nth-child(2), .items td:nth-child(2) {
-            width: 30%;
-        }
-        .items th:nth-child(3), .items td:nth-child(3) {
-            width: 40%;
-            text-align: right;
+            width: 50%;
         }
         .payment-info {
             text-align: left;
@@ -132,7 +128,6 @@
                 <tr>
                     <th>Cant</th>
                     <th>Descripción</th>
-                    <th>Precio</th>
                 </tr>
             </thead>
             <tbody id="items-container"></tbody>
@@ -157,14 +152,6 @@
     <script>
         const params = new URLSearchParams(window.location.search);
         
-        // Función para formatear números como moneda
-        const formatCurrency = (amount) => {
-            return new Intl.NumberFormat('es-GT', {
-                style: 'currency',
-                currency: 'GTQ'
-            }).format(amount);
-        };
-
         // Set fixed content
         document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
         document.getElementById('ticket').textContent = params.get('boleta') || 'Sin número';
@@ -179,43 +166,29 @@
         // Handle items with line breaks
         const cantidades = (params.get('cantidades') || '').split(',');
         const servicios = (params.get('servicios') || '').split(',');
-        const precios = (params.get('p_unit') || '').split(',');
-        
+
         const itemsContainer = document.getElementById('items-container');
         
-      // Crear una fila para cada producto
-for (let i = 0; i < cantidades.length; i++) {
-    if (cantidades[i].trim()) {
-        const tr = document.createElement('tr');
-        
-        // Asegúrate de que el precio sea un número válido
-        const precio = parseFloat(precios[i].replace(/[^\d.-]/g, '').trim()) || 0; 
-        
-        // Si el precio sigue siendo NaN, asigna 0 como valor por defecto
-        if (isNaN(precio)) {
-            console.warn(`El precio para el producto en la fila ${i + 1} es inválido. Se asigna precio 0.`);
-            precio = 0;
+        // Crear una fila para cada producto
+        for (let i = 0; i < cantidades.length; i++) {
+            if (cantidades[i].trim()) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${cantidades[i].trim()}</td>
+                    <td>${servicios[i] ? servicios[i].trim() : ''}</td>
+                `;
+                itemsContainer.appendChild(tr);
+            }
         }
 
-        tr.innerHTML = `
-            <td>${cantidades[i].trim()}</td>
-            <td>${servicios[i] ? servicios[i].trim() : ''}</td>
-            <td style="text-align: right;">${formatCurrency(precio)}</td>
-        `;
-        itemsContainer.appendChild(tr);
-    }
-}
+        // Formatear valores monetarios
+        const efectivo = parseFloat(params.get('efectivo')) || 0;
+        const total = parseFloat(params.get('total')) || 0;
+        const cambio = parseFloat(params.get('devueltas')) || 0;
 
-// Formatear valores monetarios
-const efectivo = parseFloat(params.get('efectivo')) || 0;
-const total = parseFloat(params.get('total')) || 0;
-const cambio = parseFloat(params.get('devueltas')) || 0;
-
-document.getElementById('cash').textContent = formatCurrency(efectivo);
-document.getElementById('total').textContent = formatCurrency(total);
-document.getElementById('change').textContent = formatCurrency(cambio);
-
+        document.getElementById('cash').textContent = new Intl.NumberFormat('es-GT', { style: 'currency', currency: 'GTQ' }).format(efectivo);
+        document.getElementById('total').textContent = new Intl.NumberFormat('es-GT', { style: 'currency', currency: 'GTQ' }).format(total);
+        document.getElementById('change').textContent = new Intl.NumberFormat('es-GT', { style: 'currency', currency: 'GTQ' }).format(cambio);
     </script>
 </body>
 </html>
-
