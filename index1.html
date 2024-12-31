@@ -67,6 +67,14 @@
             vertical-align: top;
             border-bottom: 1px solid #eee;
         }
+        .items th:nth-child(1), .items td:nth-child(1) {
+            width: 15%;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .items th:nth-child(2), .items td:nth-child(2) {
+            width: 85%;
+        }
         .payment-info {
             text-align: left;
             font-weight: bold;
@@ -107,7 +115,7 @@
 <body>
     <div class="ticket">
         <img src="/api/placeholder/100/100" alt="True Colors" class="logo">
-        <p class="header-text">Nit: 2825515-1</p>
+        <p class="header-text">Nit: 2825515-1 <span id="nit"></span></p>
         <p class="header-text">10A Calle 0-78, Cdad. de Guatemala</p>
         <p class="header-text">Apart-Hotel Posada San Judas</p>
         <p class="header-text">Teléfono: <span id="phone"></span></p>
@@ -146,21 +154,21 @@
         const params = new URLSearchParams(window.location.search);
 
         // Set fixed content
+        document.getElementById('nit').textContent = '2825515-1';
         document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
         document.getElementById('ticket').textContent = params.get('boleta') || 'Sin número';
         document.getElementById('customer').textContent = params.get('mesa') || 'Cliente General';
-        
+
         // Formatear fecha
         const now = new Date();
-        const dateStr = params.get('fecha') || 
-            `FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
+        const dateStr = params.get('fecha') || `FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
         document.getElementById('date').textContent = dateStr;
 
         // Handle items
         const cantidades = (params.get('cantidades') || '').split(',');
         const servicios = (params.get('servicios') || '').split(',');
         const itemsContainer = document.getElementById('items-container');
-        
+
         for (let i = 0; i < cantidades.length; i++) {
             if (cantidades[i].trim()) {
                 const tr = document.createElement('tr');
@@ -182,4 +190,3 @@
     </script>
 </body>
 </html>
-
