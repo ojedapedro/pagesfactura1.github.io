@@ -172,24 +172,24 @@
         document.getElementById('date').textContent = dateStr;
 
         // Handle items
-        const cantidades = params.get('cantidades') ? params.get('cantidades').split(',') : [];
-        const servicios = params.get('servicios') ? params.get('servicios').split(',') : [];
-        const precios = params.get('p_unit') ? params.get('p_unit').split(',') : [];
+        const cantidades = (params.get('cantidades') || '').split(',');
+        const servicios = (params.get('servicios') || '').split(',');
+        const precios = (params.get('p_unit') || '').split(',');
         const itemsContainer = document.getElementById('items-container');
 
         for (let i = 0; i < cantidades.length; i++) {
-            const cantidad = cantidades[i] ? parseInt(cantidades[i].trim()) : 0;
+            const cantidad = cantidades[i] ? cantidades[i].trim() : '0';
             const servicio = servicios[i] ? servicios[i].trim() : 'Sin descripción';
-            const precio = precios[i] ? parseFloat(precios[i].trim()) : 0;
-            const precioTotal = cantidad * precio;
+            const precio = precios[i] ? precios[i].trim() : '0.00';
+            const precioTotal = parseFloat(cantidad) * parseFloat(precio);
 
-            if (cantidad > 0) {
+            if (cantidad !== '0') {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${cantidad}</td>
                     <td>${servicio}</td>
                     <td>${precio}</td>
-                    <td>${precioTotal}</td>
+                    <td>${isNaN(precioTotal) ? '0.00' : precioTotal.toFixed(2)}</td>
                 `;
                 itemsContainer.appendChild(tr);
             }
