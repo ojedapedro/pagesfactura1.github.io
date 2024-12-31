@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+<!-- [Previous head and style sections remain the same] -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket de Venta</title>
     <style>
+        /* [Previous styles remain unchanged] */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -168,29 +170,30 @@
 
         // Formatear fecha
         const now = new Date();
-        const dateStr = params.get('fecha') || FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')};
+        const dateStr = params.get('fecha') || `FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
         document.getElementById('date').textContent = dateStr;
 
         // Handle items
         const cantidades = (params.get('cantidades') || '').split(',');
         const servicios = (params.get('servicios') || '').split(',');
         const precios = (params.get('p_unit') || '').split(',');
+        const preciototal = (params.get('preciototal') || '').split(',');
         const itemsContainer = document.getElementById('items-container');
 
         for (let i = 0; i < cantidades.length; i++) {
             const cantidad = cantidades[i] ? cantidades[i].trim() : '0';
             const servicio = servicios[i] ? servicios[i].trim() : 'Sin descripción';
             const precio = precios[i] ? precios[i].trim() : '0.00';
-            const precioTotal = parseFloat(cantidad) * parseFloat(precio);
+            const ptotal = preciototal[i] ? preciototal[i].trim() : '0.00';
 
             if (cantidad !== '0') {
                 const tr = document.createElement('tr');
-                tr.innerHTML = 
+                tr.innerHTML = `
                     <td>${cantidad}</td>
                     <td>${servicio}</td>
                     <td>${precio}</td>
-                    <td>${isNaN(precioTotal) ? '0.00' : precioTotal.toFixed(2)}</td>
-                ;
+                    <td>${ptotal}</td>
+                `;
                 itemsContainer.appendChild(tr);
             }
         }
@@ -202,3 +205,6 @@
 
         // Estado dinámico
         document.getElementById('estado').textContent = params.get('estado') || 'Sin estado';
+    </script>
+</body>
+</html>
