@@ -73,7 +73,11 @@
             vertical-align: middle;
         }
         .items th:nth-child(2), .items td:nth-child(2) {
-            width: 85%;
+            width: 50%;
+        }
+        .items th:nth-child(3), .items td:nth-child(3) {
+            width: 35%;
+            text-align: right;
         }
         .payment-info {
             text-align: left;
@@ -129,6 +133,7 @@
                 <tr>
                     <th>Cant</th>
                     <th>Descripción</th>
+                    <th>Precio</th>
                 </tr>
             </thead>
             <tbody id="items-container"></tbody>
@@ -167,6 +172,7 @@
         // Handle items
         const cantidades = (params.get('cantidades') || '').split(',');
         const servicios = (params.get('servicios') || '').split(',');
+        const precios = (params.get('p_unit') || '').split(',');
         const itemsContainer = document.getElementById('items-container');
 
         for (let i = 0; i < cantidades.length; i++) {
@@ -175,6 +181,7 @@
                 tr.innerHTML = `
                     <td>${cantidades[i].trim()}</td>
                     <td>${servicios[i] ? servicios[i].trim() : ''}</td>
+                    <td>${precios[i] ? precios[i].trim() : '0.00'}</td>
                 `;
                 itemsContainer.appendChild(tr);
             }
@@ -190,3 +197,4 @@
     </script>
 </body>
 </html>
+
