@@ -156,62 +156,6 @@
     </div>
 
     <script>
-        function numeroATexto(numero) {
-            const unidades = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
-            const especiales = ['diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve'];
-            const decenas = ['', 'diez', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
-            const centenas = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
-
-            let [parteEntera, parteDecimal] = numero.toString().split('.');
-            parteEntera = parseInt(parteEntera);
-            parteDecimal = parteDecimal ? parseInt(parteDecimal) : 0;
-
-            if (parteEntera === 0) return 'cero';
-            if (parteEntera === 1) return 'un';
-
-            let texto = '';
-
-            // Manejo de centenas
-            if (parteEntera >= 100) {
-                if (parteEntera === 100) {
-                    return 'cien';
-                }
-                texto += centenas[Math.floor(parteEntera / 100)] + ' ';
-                parteEntera %= 100;
-            }
-
-            // Manejo de decenas y unidades
-            if (parteEntera > 0) {
-                if (parteEntera < 10) {
-                    texto += unidades[parteEntera];
-                } else if (parteEntera < 20) {
-                    texto += especiales[parteEntera - 10];
-                } else {
-                    const unidad = parteEntera % 10;
-                    if (unidad === 0) {
-                        texto += decenas[Math.floor(parteEntera / 10)];
-                    } else {
-                        texto += decenas[Math.floor(parteEntera / 10)] + ' y ' + unidades[unidad];
-                    }
-                }
-            }
-
-            return texto.trim();
-        }
-
-        function formatearPrecioEnTexto(precio) {
-            const [parteEntera, parteDecimal] = precio.toString().split('.');
-            let texto = numeroATexto(parseInt(parteEntera));
-            
-            if (parteDecimal) {
-                texto += ' quetzales con ' + numeroATexto(parseInt(parteDecimal)) + ' centavos';
-            } else {
-                texto += ' quetzales';
-            }
-            
-            return texto;
-        }
-
         const params = new URLSearchParams(window.location.search);
 
         // Set fixed content
@@ -237,24 +181,24 @@
 
             // Normalizar y convertir precios
             const precio = precios[i]
-                ? parseInt(precios[i].replace(/[\.,]/g, ''), 10).toString()
-                : '0'; // Eliminar puntos o comas y asegurarse de que sea un número entero
+                ? parseFloat(precios[i].replace(/,/g, '')).toFixed(2)
+                : '0.00'; // Eliminar puntos o comas y asegurarse de que sea un número flotante
 
             if (cantidad !== '0') {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${cantidad}</td>
                     <td>${servicio}</td>
-                    <td>${formatearPrecioEnTexto(precio)}</td>
+                    <td>Q${precio}</td>
                 `;
                 itemsContainer.appendChild(tr);
             }
         }
 
         // Valores de efectivo, total y cambio
-        document.getElementById('cash').textContent = formatearPrecioEnTexto(params.get('efectivo') || '0.00');
-        document.getElementById('total').textContent = formatearPrecioEnTexto(params.get('total') || '0.00');
-        document.getElementById('change').textContent = formatearPrecioEnTexto(params.get('devueltas') || '0.00');
+        document.getElementById('cash').textContent = `Q${parseFloat(params.get('efectivo') || '0.00').toFixed(2)}`;
+        document.getElementById('total').textContent = `Q${parseFloat(params.get('total') || '0.00').toFixed(2)}`;
+        document.getElementById('change').textContent = `Q${parseFloat(params.get('devueltas') || '0.00').toFixed(2)}`;
 
         // Estado dinámico
         document.getElementById('estado').textContent = params.get('estado') || 'Sin estado';
