@@ -73,12 +73,12 @@
             vertical-align: middle;
         }
         .items th:nth-child(2), .items td:nth-child(2) {
-            width: 40%;
+            width: 55%;
         }
-        .items th:nth-child(3), .items td:nth-child(3),
-        .items th:nth-child(4), .items td:nth-child(4) {
-            width: 22.5%;
-            text-align: right;
+        .items th:nth-child(3), .items td:nth-child(3) {
+            width: 30%;
+            width: 40%;
+            text-align: left;
         }
         .payment-info {
             text-align: left;
@@ -134,10 +134,7 @@
                 <tr>
                     <th>Cant</th>
                     <th>Descripción</th>
-                    <th>Precio Unit</th>
-                    <th>Total</th>
                     <th>Precio</th>
-                    <th>Precio Total</th>
                 </tr>
             </thead>
             <tbody id="items-container"></tbody>
@@ -171,7 +168,6 @@
         // Formatear fecha
         const now = new Date();
         const dateStr = params.get('fecha') || `FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
-        const dateStr = params.get('fecha') || FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')};
         document.getElementById('date').textContent = dateStr;
 
         // Handle items
@@ -181,28 +177,17 @@
         const itemsContainer = document.getElementById('items-container');
 
         for (let i = 0; i < cantidades.length; i++) {
-            const cantidad = parseFloat(cantidades[i]?.trim()) || 0;
-            const servicio = servicios[i]?.trim() || 'Sin descripción';
-            const precio = parseFloat(precios[i]?.trim()) || 0;
-            const precioTotal = cantidad * precio;
             const cantidad = cantidades[i] ? cantidades[i].trim() : '0';
             const servicio = servicios[i] ? servicios[i].trim() : 'Sin descripción';
             const precio = precios[i] ? precios[i].trim() : '0.00';
-            const precioTotal = parseFloat(cantidad) * parseFloat(precio);
 
-            if (cantidad > 0) {
             if (cantidad !== '0') {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                tr.innerHTML = 
                     <td>${cantidad}</td>
                     <td>${servicio}</td>
-                    <td>Q${precio.toFixed(2)}</td>
-                    <td>Q${precioTotal.toFixed(2)}</td>
-                `;
                     <td>${precio}</td>
-                    <td>${isNaN(precioTotal) ? '0.00' : precioTotal.toFixed(2)}</td>
-                ;
+                `;
                 itemsContainer.appendChild(tr);
             }
         }
