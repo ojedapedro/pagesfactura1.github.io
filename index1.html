@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket de Venta</title>
     <style>
-        /* Estilos conservados */
+        /* Conservamos los estilos */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -171,11 +171,11 @@
         document.getElementById('date').textContent = dateStr;
 
         // Función para limpiar y convertir números
-        function parseNumber(input) {
+        function parseInteger(input) {
             if (!input) return 0;
-            // Reemplazar separadores de miles (.) y manejar decimales (, o .)
-            const normalized = input.replace(/\./g, '').replace(/,/g, '.');
-            return parseFloat(normalized) || 0;
+            // Eliminar puntos (separadores de miles) y convertir coma en nada
+            const normalized = input.replace(/\./g, '').replace(/,/g, '');
+            return parseInt(normalized, 10) || 0;
         }
 
         // Handle items
@@ -187,27 +187,26 @@
         for (let i = 0; i < cantidades.length; i++) {
             const cantidad = cantidades[i] ? cantidades[i].trim() : '0';
             const servicio = servicios[i] ? servicios[i].trim() : 'Sin descripción';
-            const precio = parseNumber(precios[i]);
+            const precio = parseInteger(precios[i]);
 
             if (cantidad !== '0') {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${cantidad}</td>
                     <td>${servicio}</td>
-                    <td>Q${precio.toFixed(2)}</td>
+                    <td>Q${precio}</td>
                 `;
                 itemsContainer.appendChild(tr);
             }
         }
 
         // Valores de efectivo, total y cambio
-        document.getElementById('cash').textContent = `Q${parseNumber(params.get('efectivo')).toFixed(2)}`;
-        document.getElementById('total').textContent = `Q${parseNumber(params.get('total')).toFixed(2)}`;
-        document.getElementById('change').textContent = `Q${parseNumber(params.get('devueltas')).toFixed(2)}`;
+        document.getElementById('cash').textContent = `Q${parseInteger(params.get('efectivo'))}`;
+        document.getElementById('total').textContent = `Q${parseInteger(params.get('total'))}`;
+        document.getElementById('change').textContent = `Q${parseInteger(params.get('devueltas'))}`;
 
         // Estado dinámico
         document.getElementById('estado').textContent = params.get('estado') || 'Sin estado';
     </script>
 </body>
 </html>
-
