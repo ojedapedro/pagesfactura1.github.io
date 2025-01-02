@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket de Venta</title>
     <style>
+        /* Estilos conservados */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -169,6 +170,14 @@
         const dateStr = params.get('fecha') || `FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
         document.getElementById('date').textContent = dateStr;
 
+        // Función para limpiar y convertir números
+        function parseNumber(input) {
+            if (!input) return 0;
+            // Reemplazar separadores de miles (.) y manejar decimales (, o .)
+            const normalized = input.replace(/\./g, '').replace(/,/g, '.');
+            return parseFloat(normalized) || 0;
+        }
+
         // Handle items
         const cantidades = (params.get('cantidades') || '').split(',');
         const servicios = (params.get('servicios') || '').split(',');
@@ -178,30 +187,27 @@
         for (let i = 0; i < cantidades.length; i++) {
             const cantidad = cantidades[i] ? cantidades[i].trim() : '0';
             const servicio = servicios[i] ? servicios[i].trim() : 'Sin descripción';
-
-            // Normalizar y convertir precios
-            const precio = precios[i]
-                ? parseFloat(precios[i].replace(/,/g, '')).toFixed(2)
-                : '0.00'; // Eliminar puntos o comas y asegurarse de que sea un número flotante
+            const precio = parseNumber(precios[i]);
 
             if (cantidad !== '0') {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${cantidad}</td>
                     <td>${servicio}</td>
-                    <td>Q${precio}</td>
+                    <td>Q${precio.toFixed(2)}</td>
                 `;
                 itemsContainer.appendChild(tr);
             }
         }
 
         // Valores de efectivo, total y cambio
-        document.getElementById('cash').textContent = `Q${parseFloat(params.get('efectivo') || '0.00').toFixed(2)}`;
-        document.getElementById('total').textContent = `Q${parseFloat(params.get('total') || '0.00').toFixed(2)}`;
-        document.getElementById('change').textContent = `Q${parseFloat(params.get('devueltas') || '0.00').toFixed(2)}`;
+        document.getElementById('cash').textContent = `Q${parseNumber(params.get('efectivo')).toFixed(2)}`;
+        document.getElementById('total').textContent = `Q${parseNumber(params.get('total')).toFixed(2)}`;
+        document.getElementById('change').textContent = `Q${parseNumber(params.get('devueltas')).toFixed(2)}`;
 
         // Estado dinámico
         document.getElementById('estado').textContent = params.get('estado') || 'Sin estado';
     </script>
 </body>
 </html>
+
