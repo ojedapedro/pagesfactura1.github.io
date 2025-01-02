@@ -1,12 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="es">
-<!-- [Previous head and style sections remain the same] -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket de Venta</title>
     <style>
-        /* [Previous styles remain unchanged] */
+        /* Previous styles remain unchanged */
+        .items th:nth-child(1), .items td:nth-child(1) { width: 15%; text-align: center; }
+        .items th:nth-child(2), .items td:nth-child(2) { width: 40%; }
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -78,6 +80,7 @@
             width: 40%;
         }
         .items th:nth-child(3), .items td:nth-child(3),
+        .items th:nth-child(4), .items td:nth-child(4) { width: 22.5%; text-align: right; }
         .items th:nth-child(4), .items td:nth-child(4) {
             width: 22.5%;
             text-align: right;
@@ -142,13 +145,11 @@
             </thead>
             <tbody id="items-container"></tbody>
         </table>
-
         <div class="payment-info">
             <p>EFECTIVO: <span id="cash"></span></p>
             <p>TOTAL: <span id="total"></span></p>
             <p>CAMBIO: <span id="change"></span></p>
         </div>
-
         <p class="important" id="estado"></p>
         <p class="important">IMPORTANTE:</p>
         
@@ -161,48 +162,51 @@
 
     <script>
         const params = new URLSearchParams(window.location.search);
-
+        
+        const cantidades = (params.get('cantidades') || '').split(',');
+        const servicios = (params.get('servicios') || '').split(',');
+        const precios = (params.get('p_unit') || '').split(',');
         // Set fixed content
         document.getElementById('nit').textContent = '2825515-1';
         document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
         document.getElementById('ticket').textContent = params.get('boleta') || 'Sin número';
         document.getElementById('customer').textContent = params.get('mesa') || 'Cliente General';
-
         // Formatear fecha
         const now = new Date();
         const dateStr = params.get('fecha') || `FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
         document.getElementById('date').textContent = dateStr;
-
         // Handle items
-        const cantidades = (params.get('cantidades') || '').split(',');
-        const servicios = (params.get('servicios') || '').split(',');
-        const precios = (params.get('p_unit') || '').split(',');
-        const preciototal = (params.get('preciototal') || '').split(',');
+        const cantidades = params.get('cantidades') ? params.get('cantidades').split(',') : [];
+        const servicios = params.get('servicios') ? params.get('servicios').split(',') : [];
+        const precios = params.get('p_unit') ? params.get('p_unit').split(',') : [];
         const itemsContainer = document.getElementById('items-container');
 
         for (let i = 0; i < cantidades.length; i++) {
-            const cantidad = cantidades[i] ? cantidades[i].trim() : '0';
+            const cantidad = parseFloat(cantidades[i] || 0);
+            const servicio = servicios[i]?.trim() || 'Sin descripción';
+            const precio = parseFloat(precios[i] || 0);
+            const precioTotal = (cantidad * precio).toFixed(2);
+            const cantidad = cantidades[i] ? parseInt(cantidades[i].trim()) : 0;
             const servicio = servicios[i] ? servicios[i].trim() : 'Sin descripción';
-            const precio = precios[i] ? precios[i].trim() : '0.00';
-            const ptotal = preciototal[i] ? preciototal[i].trim() : '0.00';
+            const precio = precios[i] ? parseFloat(precios[i].trim()) : 0;
+            const precioTotal = cantidad * precio;
 
-            if (cantidad !== '0') {
+            if (cantidad > 0) {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${cantidad}</td>
                     <td>${servicio}</td>
-                    <td>Q${precio}</td>
-                    <td>Q${ptotal}</td>
+                    <td>${precio.toFixed(2)}</td>
+                    <td>${precio}</td>
+                    <td>${precioTotal}</td>
                 `;
                 itemsContainer.appendChild(tr);
             }
         }
-
         // Valores de efectivo, total y cambio
         document.getElementById('cash').textContent = params.get('efectivo') || '0.00';
-        document.getElementById('Subtotal').textContent = params.get('total') || '0.00';
+        document.getElementById('total').textContent = params.get('total') || '0.00';
         document.getElementById('change').textContent = params.get('devueltas') || '0.00';
-
         // Estado dinámico
         document.getElementById('estado').textContent = params.get('estado') || 'Sin estado';
     </script>
