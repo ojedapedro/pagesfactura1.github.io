@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket de Venta</title>
     <style>
-        /* Conservamos los estilos */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -170,14 +169,6 @@
         const dateStr = params.get('fecha') || `FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
         document.getElementById('date').textContent = dateStr;
 
-        // Función para limpiar y convertir números
-        function parseInteger(input) {
-            if (!input) return 0;
-            // Eliminar puntos (separadores de miles) y convertir coma en nada
-            const normalized = input.replace(/\./g, '').replace(/,/g, '');
-            return parseInt(normalized, 10) || 0;
-        }
-
         // Handle items
         const cantidades = (params.get('cantidades') || '').split(',');
         const servicios = (params.get('servicios') || '').split(',');
@@ -187,7 +178,7 @@
         for (let i = 0; i < cantidades.length; i++) {
             const cantidad = cantidades[i] ? cantidades[i].trim() : '0';
             const servicio = servicios[i] ? servicios[i].trim() : 'Sin descripción';
-            const precio = parseInteger(precios[i]);
+            const precio = precios[i] ? precios[i].trim() : '0';
 
             if (cantidad !== '0') {
                 const tr = document.createElement('tr');
@@ -201,9 +192,9 @@
         }
 
         // Valores de efectivo, total y cambio
-        document.getElementById('cash').textContent = `Q${parseInteger(params.get('efectivo'))}`;
-        document.getElementById('total').textContent = `Q${parseInteger(params.get('total'))}`;
-        document.getElementById('change').textContent = `Q${parseInteger(params.get('devueltas'))}`;
+        document.getElementById('cash').textContent = `Q${params.get('efectivo') || '0'}`;
+        document.getElementById('total').textContent = `Q${params.get('total') || '0'}`;
+        document.getElementById('change').textContent = `Q${params.get('devueltas') || '0'}`;
 
         // Estado dinámico
         document.getElementById('estado').textContent = params.get('estado') || 'Sin estado';
