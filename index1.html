@@ -169,6 +169,18 @@
         const dateStr = params.get('fecha') || `FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
         document.getElementById('date').textContent = dateStr;
 
+        // Función para normalizar los precios
+        function normalizarPrecio(precio) {
+            if (!precio) return '0';
+            // Eliminar espacios en blanco
+            precio = precio.trim();
+            // Reemplazar la secuencia ",000" por "000"
+            precio = precio.replace(/,000/g, '000');
+            // Reemplazar la secuencia ".000" por "000"
+            precio = precio.replace(/.000/g, '000');
+            return precio;
+        }
+
         // Handle items
         const cantidades = (params.get('cantidades') || '').split(',');
         const servicios = (params.get('servicios') || '').split(',');
@@ -178,7 +190,7 @@
         for (let i = 0; i < cantidades.length; i++) {
             const cantidad = cantidades[i] ? cantidades[i].trim() : '0';
             const servicio = servicios[i] ? servicios[i].trim() : 'Sin descripción';
-            const precio = precios[i] ? precios[i].trim() : '0';
+            const precio = normalizarPrecio(precios[i]);
 
             if (cantidad !== '0') {
                 const tr = document.createElement('tr');
@@ -192,9 +204,9 @@
         }
 
         // Valores de efectivo, total y cambio
-        document.getElementById('cash').textContent = `Q${params.get('efectivo') || '0'}`;
-        document.getElementById('total').textContent = `Q${params.get('total') || '0'}`;
-        document.getElementById('change').textContent = `Q${params.get('devueltas') || '0'}`;
+        document.getElementById('cash').textContent = `Q${normalizarPrecio(params.get('efectivo'))}`;
+        document.getElementById('total').textContent = `Q${normalizarPrecio(params.get('total'))}`;
+        document.getElementById('change').textContent = `Q${normalizarPrecio(params.get('devueltas'))}`;
 
         // Estado dinámico
         document.getElementById('estado').textContent = params.get('estado') || 'Sin estado';
