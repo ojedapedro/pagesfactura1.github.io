@@ -166,7 +166,7 @@
 
         // Formatear fecha
         const now = new Date();
-        const dateStr = params.get('fecha') || FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')};
+        const dateStr = params.get('fecha') || `FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
         document.getElementById('date').textContent = dateStr;
 
         // Función para normalizar los precios con formato de número entero
@@ -199,19 +199,19 @@
 
             if (cantidad !== '0') {
                 const tr = document.createElement('tr');
-                tr.innerHTML = 
+                tr.innerHTML = `
                     <td>${cantidad}</td>
                     <td>${servicio}</td>
                     <td>Q${precio}</td>
-                ;
+                `;
                 itemsContainer.appendChild(tr);
             }
         }
 
         // Valores de efectivo, total y cambio
-        document.getElementById('cash').textContent = Q${normalizarPrecio(params.get('efectivo'))};
-        document.getElementById('total').textContent = Q${normalizarPrecio(params.get('total'))};
-        document.getElementById('change').textContent = Q${normalizarPrecio(params.get('devueltas'))};
+        document.getElementById('cash').textContent = `Q${normalizarPrecio(params.get('efectivo'))}`;
+        document.getElementById('total').textContent = `Q${normalizarPrecio(params.get('total'))}`;
+        document.getElementById('change').textContent = `Q${normalizarPrecio(params.get('devueltas'))}`;
 
         // Estado dinámico
         document.getElementById('estado').textContent = params.get('estado') || 'Sin estado';
