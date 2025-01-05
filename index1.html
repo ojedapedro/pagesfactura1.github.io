@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
-<!-- [Previous head and style remain the same] -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket de Venta</title>
     <style>
-        /* [Previous styles remain the same] */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -158,9 +156,34 @@
     </div>
 
     <script>
+        // Función para formatear precios
+        function formatearPrecio(precio) {
+            if (!precio) return '0';
+            // Reemplazar %20 con espacios y limpiar el string
+            precio = decodeURIComponent(precio.trim());
+            
+            // Si el precio ya incluye una coma (es miles), lo dejamos igual
+            if (/^\d{1,3}(,\d{3})*$/.test(precio)) {
+                return precio;
+            }
+
+            // Si el precio es solo dígitos sin comas, lo dejamos igual
+            if (/^\d+$/.test(precio)) {
+                return precio;
+            }
+
+            // Si el precio es '000', lo convertimos a '0'
+            if (precio === '000') {
+                return '0';
+            }
+
+            return precio; // Retornar el precio limpio o procesado
+        }
+
+        // Obtener parámetros de la URL
         const params = new URLSearchParams(window.location.search);
 
-        // Set fixed content
+        // Asignar valores fijos
         document.getElementById('nit').textContent = '2825515-1';
         document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
         document.getElementById('ticket').textContent = params.get('boleta') || 'Sin número';
@@ -168,29 +191,10 @@
 
         // Formatear fecha
         const now = new Date();
-        const dateStr = params.get('fecha') || `FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
+        const dateStr = params.get('fecha') || `FECHA DE RECEPCIÓN: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
         document.getElementById('date').textContent = dateStr;
 
-        // Función para formatear precio
-        function formatearPrecio(precio) {
-            if (!precio) return '0';
-            precio = precio.trim();
-            // Si el precio es solo dígitos sin coma, es un número simple
-            if (/^\d+$/.test(precio)) {
-                return precio;
-            }
-            // Si ya tiene formato con coma, lo dejamos así
-            if (precio.includes(',')) {
-                return precio;
-            }
-            // Si es '000', lo convertimos a '0'
-            if (precio === '000') {
-                return '0';
-            }
-            return precio;
-        }
-
-        // Handle items
+        // Procesar los ítems
         const cantidades = (params.get('cantidades') || '').split(',');
         const servicios = (params.get('servicios') || '').split(',');
         const precios = (params.get('p_unit') || '').split(',');
@@ -198,7 +202,7 @@
 
         for (let i = 0; i < cantidades.length; i++) {
             const cantidad = cantidades[i] ? cantidades[i].trim() : '0';
-            const servicio = servicios[i] ? servicios[i].trim() : 'Sin descripción';
+            const servicio = servicios[i] ? decodeURIComponent(servicios[i]).trim() : 'Sin descripción';
             const precio = formatearPrecio(precios[i]);
 
             if (cantidad !== '0') {
