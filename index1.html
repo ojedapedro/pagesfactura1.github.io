@@ -169,23 +169,20 @@
         const dateStr = params.get('fecha') || `FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
         document.getElementById('date').textContent = dateStr;
 
-        // Función para normalizar los precios
         // Función para normalizar los precios con formato específico
         function normalizarPrecio(precio) {
-            if (!precio) return '0';
-            
+            if (!precio) return '0.00';
+
             // Eliminar espacios en blanco
             precio = precio.trim();
-            // Reemplazar la secuencia ",000" por "000"
-            precio = precio.replace(/,000/g, '000');
-            // Reemplazar la secuencia ".000" por "000"
-            precio = precio.replace(/.000/g, '000');
-            return precio;
-            
+            // Reemplazar la secuencia ",000" o ".000" por "000"
+            precio = precio.replace(/,000|\.000/g, '000');
+
             // Convertir el precio a número
             let numero = parseFloat(precio.replace(/[^\d.-]/g, ''));
-            
-            // Formatear el número con comas para miles y punto para decimales
+            if (isNaN(numero)) return '0.00';
+
+            // Formatear el número con separadores de miles y 2 decimales
             return numero.toLocaleString('es-GT', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
