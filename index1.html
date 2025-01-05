@@ -99,7 +99,8 @@
         function formatearPrecio(precio) {
             if (!precio) return '0';
             precio = decodeURIComponent(precio.trim());
-            return precio.replace(/,/g, ''); // Elimina las comas de los valores numéricos
+            // Cambiar comas por puntos para formato correcto
+            return precio.replace(/,/g, '.'); 
         }
 
         // Cargar datos de la URL
