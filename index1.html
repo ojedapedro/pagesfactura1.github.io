@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
+<!-- [Previous head content remains the same] -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket de Venta</title>
     <style>
+        /* [Previous styles remain the same] */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -169,23 +171,7 @@
         const dateStr = params.get('fecha') || `FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
         document.getElementById('date').textContent = dateStr;
 
-        // Función para normalizar los precios con formato específico
-        function normalizarPrecio(precio) {
-            if (!precio) return '0';
-            
-            // Eliminar espacios en blanco
-            precio = precio.trim();
-            
-            // Convertir el precio a número
-            let numero = parseFloat(precio.replace(/[^\d.-]/g, ''));
-            
-            // Formatear el número con comas para miles y punto para decimales
-            return numero.toLocaleString('es-GT', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-        }
-
+     
         // Handle items
         const cantidades = (params.get('cantidades') || '').split(',');
         const servicios = (params.get('servicios') || '').split(',');
