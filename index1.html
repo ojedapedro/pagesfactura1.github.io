@@ -99,8 +99,7 @@
         function formatearPrecio(precio) {
             if (!precio) return '0';
             precio = decodeURIComponent(precio.trim());
-            // Cambiar comas por puntos para formato correcto
-            return precio.replace(/,/g, '.'); 
+            return precio.replace(/,/g, ''); // Elimina las comas de los valores numéricos
         }
 
         // Cargar datos de la URL
@@ -117,12 +116,12 @@
         const estado = params.get('estado') || 'Sin estado';
 
         // Actualizar contenido del ticket
-        document.getElementById('ticket').textContent = `Ticket: ${ticket}`;
-        document.getElementById('customer').textContent = `Cliente: ${customer}`;
-        document.getElementById('date').textContent = `Fecha: ${date}`;
-        document.getElementById('cash').textContent = `Q${formatearPrecio(cash)}`;
-        document.getElementById('total').textContent = `Q${formatearPrecio(total)}`;
-        document.getElementById('change').textContent = `Q${formatearPrecio(change)}`;
+        document.getElementById('ticket').textContent = Ticket: ${ticket};
+        document.getElementById('customer').textContent = Cliente: ${customer};
+        document.getElementById('date').textContent = Fecha: ${date};
+        document.getElementById('cash').textContent = Q${formatearPrecio(cash)};
+        document.getElementById('total').textContent = Q${formatearPrecio(total)};
+        document.getElementById('change').textContent = Q${formatearPrecio(change)};
         document.getElementById('estado').textContent = estado;
 
         // Generar tabla de productos
@@ -134,11 +133,11 @@
 
             if (cantidad !== '0') {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
+                tr.innerHTML = 
                     <td>${cantidad}</td>
                     <td>${servicio}</td>
                     <td>Q${precio}</td>
-                `;
+                ;
                 itemsContainer.appendChild(tr);
             }
         }
