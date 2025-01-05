@@ -77,7 +77,7 @@
         }
         .items th:nth-child(3), .items td:nth-child(3) {
             width: 30%;
-            text-align: right;
+            text-align: left;
         }
         .payment-info {
             text-align: left;
@@ -169,8 +169,10 @@
         const dateStr = params.get('fecha') || `FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
         document.getElementById('date').textContent = dateStr;
 
+        // Función para normalizar los precios con formato específico
         // Función para normalizar los precios con formato de número entero
         function normalizarPrecio(precio) {
+            if (!precio) return '0.00';
             if (!precio) return '0';
 
             // Eliminar espacios en blanco
@@ -179,10 +181,15 @@
             precio = precio.replace(/,000|\.000/g, '000');
 
             // Convertir el precio a número
+            let numero = parseFloat(precio.replace(/[^\d.-]/g, ''));
+            if (isNaN(numero)) return '0.00';
+            // Formatear el número con separadores de miles y 2 decimales
+            return numero.toLocaleString('es-GT', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
             let numero = Math.round(parseFloat(precio.replace(/[^\d.-]/g, '')));
-
             if (isNaN(numero)) return '0';
-
             // Formatear el número con separadores de miles y sin decimales
             return numero.toLocaleString('es-GT');
         }
