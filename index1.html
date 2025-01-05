@@ -77,7 +77,7 @@
         }
         .items th:nth-child(3), .items td:nth-child(3) {
             width: 30%;
-            text-align: left;
+            text-align: right;
         }
         .payment-info {
             text-align: left;
@@ -180,6 +180,7 @@
 
             // Convertir el precio a número
             let numero = Math.round(parseFloat(precio.replace(/[^\d.-]/g, '')));
+
             if (isNaN(numero)) return '0';
 
             // Formatear el número con separadores de miles y sin decimales
