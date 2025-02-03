@@ -238,7 +238,7 @@
         // Valores de efectivo, total y cambio
         document.getElementById('cash').textContent = `Q${normalizarPrecio(params.get('efectivo'))}`;
         document.getElementById('total').textContent = `Q${normalizarPrecio(params.get('total'))}`;
-        document.getElementById('change').textContent = `Q${normalizarPrecio(params.get('devueltas'))}`;
+        document.getElementById('change').textContent = `Q${normalizarPrecio(params.get('propina'))}`;
 
         // Estado dinámico
         document.getElementById('estado').textContent = params.get('estado') || 'Sin estado';
