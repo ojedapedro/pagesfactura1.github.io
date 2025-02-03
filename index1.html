@@ -200,22 +200,39 @@
         const precios = (params.get('p_unit') || '').split(',');
         const itemsContainer = document.getElementById('items-container');
 
+        // Objeto para agrupar productos por descripción
+        const productosAgrupados = {};
+
         for (let i = 0; i < cantidades.length; i++) {
-            const cantidad = cantidades[i] ? cantidades[i].trim() : '0';
+            const cantidad = cantidades[i] ? parseFloat(cantidades[i].trim()) : 0;
             const servicio = servicios[i] ? servicios[i].trim() : 'Sin descripción';
             const precio = normalizarPrecio(precios[i]);
-            const total = parseFloat(cantidad) * parseFloat(precio.replace(/[^\d.-]/g, ''));
 
-            if (cantidad !== '0') {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${cantidad}</td>
-                    <td>${servicio}</td>
-                    <td>Q${precio}</td>
-                    <td>Q${total.toLocaleString('es-GT')}</td>
-                `;
-                itemsContainer.appendChild(tr);
+            if (cantidad > 0) {
+                if (productosAgrupados[servicio]) {
+                    // Si el producto ya existe, sumar la cantidad
+                    productosAgrupados[servicio].cantidad += cantidad;
+                } else {
+                    // Si no existe, agregarlo al objeto
+                    productosAgrupados[servicio] = {
+                        cantidad: cantidad,
+                        precio: precio,
+                    };
+                }
             }
+        }
+
+        // Mostrar los productos agrupados en la tabla
+        for (const [servicio, datos] of Object.entries(productosAgrupados)) {
+            const tr = document.createElement('tr');
+            const total = parseFloat(datos.cantidad) * parseFloat(datos.precio.replace(/[^\d.-]/g, ''));
+            tr.innerHTML = `
+                <td>${datos.cantidad}</td>
+                <td>${servicio}</td>
+                <td>Q${datos.precio}</td>
+                <td>Q${total.toLocaleString('es-GT')}</td>
+            `;
+            itemsContainer.appendChild(tr);
         }
 
         // Valores de efectivo, total y cambio
