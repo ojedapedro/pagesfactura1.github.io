@@ -67,22 +67,6 @@
             vertical-align: top;
             border-bottom: 1px solid #eee;
         }
-        .items th:nth-child(1), .items td:nth-child(1) {
-            width: 10%;
-            text-align: center;
-            vertical-align: middle;
-        }
-        .items th:nth-child(2), .items td:nth-child(2) {
-            width: 50%;
-        }
-        .items th:nth-child(3), .items td:nth-child(3) {
-            width: 20%;
-            text-align: left;
-        }
-        .items th:nth-child(4), .items td:nth-child(4) {
-            width: 20%;
-            text-align: left;
-        }
         .payment-info {
             text-align: left;
             font-weight: bold;
@@ -122,9 +106,7 @@
 </head>
 <body>
     <div class="ticket">
-        <!-- Imagen del logo desde ImgBB -->
         <img src="https://i.ibb.co/qf0C6bb/un-logotipo-con-las-palabras-true-colors-en-letr-2.png" alt="True Colors" class="logo">
-        <!-- Texto "True Colors" debajo del logo -->
         <p class="header-text" style="font-size: 18px; font-weight: bold; margin: 5px 0;">True Colors</p>
         <p class="header-text">Nit: <span id="nit"></span></p>
         <p class="header-text">10A Calle 0-78, Cdad. de Guatemala</p>
@@ -159,89 +141,5 @@
         <div class="footer">
             <p>Facturas AutoSystem</p>
             <p>Contactos: <a href="tel:+573158208619">+57 315 820 8619</a></p>
-            <p>Síguenos en redes sociales como<br>@AutoSystem</p>
-        </div>
-    </div>
+            <p>Sígu
 
-    <script>
-        const params = new URLSearchParams(window.location.search);
-
-        // Set fixed content
-        document.getElementById('nit').textContent = '2825515-1';
-        document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
-        document.getElementById('ticket').textContent = params.get('boleta') || 'Sin número';
-        document.getElementById('customer').textContent = params.get('mesa') || 'Cliente General';
-
-        // Formatear fecha
-        const now = new Date();
-        const dateStr = params.get('fecha') || `FECHA DE RECEPCION: ${now.toLocaleDateString('es-GT')} ${now.toLocaleTimeString('es-GT')}`;
-        document.getElementById('date').textContent = dateStr;
-
-        // Función para normalizar los precios con formato de número entero
-        function normalizarPrecio(precio) {
-            if (!precio) return '0';
-
-            // Eliminar espacios en blanco
-            precio = precio.trim();
-            // Reemplazar la secuencia ",000" o ".000" por "000"
-            precio = precio.replace(/,000|\.000/g, '000');
-
-            // Convertir el precio a número
-            let numero = Math.round(parseFloat(precio.replace(/[^\d.-]/g, '')));
-            if (isNaN(numero)) return '0';
-
-            // Formatear el número con separadores de miles y sin decimales
-            return numero.toLocaleString('es-GT');
-        }
-
-        // Handle items
-        const cantidades = (params.get('cantidades') || '').split(',');
-        const servicios = (params.get('servicios') || '').split(',');
-        const precios = (params.get('p_unit') || '').split(',');
-        const itemsContainer = document.getElementById('items-container');
-
-        // Objeto para agrupar productos por descripción
-        const productosAgrupados = {};
-
-        for (let i = 0; i < cantidades.length; i++) {
-            const cantidad = cantidades[i] ? parseFloat(cantidades[i].trim()) : 0;
-            const servicio = servicios[i] ? servicios[i].trim() : 'Sin descripción';
-            const precio = normalizarPrecio(precios[i]);
-
-            if (cantidad > 0) {
-                if (productosAgrupados[servicio]) {
-                    // Si el producto ya existe, sumar la cantidad
-                    productosAgrupados[servicio].cantidad += cantidad;
-                } else {
-                    // Si no existe, agregarlo al objeto
-                    productosAgrupados[servicio] = {
-                        cantidad: cantidad,
-                        precio: precio,
-                    };
-                }
-            }
-        }
-
-        // Mostrar los productos agrupados en la tabla
-        for (const [servicio, datos] of Object.entries(productosAgrupados)) {
-            const tr = document.createElement('tr');
-            const total = parseFloat(datos.cantidad) * parseFloat(datos.precio.replace(/[^\d.-]/g, ''));
-            tr.innerHTML = `
-                <td>${datos.cantidad}</td>
-                <td>${servicio}</td>
-                <td>Q${datos.precio}</td>
-                <td>Q${total.toLocaleString('es-GT')}</td>
-            `;
-            itemsContainer.appendChild(tr);
-        }
-
-        // Valores de efectivo, total y cambio
-        document.getElementById('cash').textContent = `Q${normalizarPrecio(params.get('efectivo'))}`;
-        document.getElementById('total').textContent = `Q${normalizarPrecio(params.get('total'))}`;
-        document.getElementById('change').textContent = `Q${normalizarPrecio(params.get('propina'))}`;
-
-        // Estado dinámico
-        document.getElementById('estado').textContent = params.get('estado') || 'Sin estado';
-    </script>
-</body>
-</html>
