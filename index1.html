@@ -147,6 +147,7 @@
 
     <script>
         const params = new URLSearchParams(window.location.search);
+        
         document.getElementById('nit').textContent = '2825515-1';
         document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
         document.getElementById('ticket').textContent = params.get('boleta') || 'Sin número';
@@ -154,6 +155,39 @@
         document.getElementById('date').textContent = params.get('fecha') || new Date().toLocaleString('es-GT');
         document.getElementById('estado').textContent = params.get('estado') || 'Sin estado';
         document.getElementById('metodo-pago').textContent = params.get('pago') || 'No especificado';
+
+        // Obtener y procesar los productos
+        const itemsContainer = document.getElementById('items-container');
+        const productos = params.get('productos'); // Espera un JSON en formato string
+
+        if (productos) {
+            try {
+                const items = JSON.parse(decodeURIComponent(productos)); // Decodificar y parsear JSON
+                let total = 0;
+                
+                items.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.cantidad}</td>
+                        <td>${item.descripcion}</td>
+                        <td>Q${item.precio.toFixed(2)}</td>
+                        <td>Q${(item.cantidad * item.precio).toFixed(2)}</td>
+                    `;
+                    itemsContainer.appendChild(row);
+                    total += item.cantidad * item.precio;
+                });
+
+                // Mostrar totales
+                document.getElementById('total').textContent = `Q${total.toFixed(2)}`;
+                const efectivo = parseFloat(params.get('efectivo')) || 0;
+                document.getElementById('cash').textContent = `Q${efectivo.toFixed(2)}`;
+                document.getElementById('change').textContent = `Q${(efectivo - total).toFixed(2)}`;
+            } catch (error) {
+                console.error('Error al procesar los productos:', error);
+            }
+        } else {
+            itemsContainer.innerHTML = '<tr><td colspan="4" style="text-align: center;">No hay productos</td></tr>';
+        }
     </script>
 </body>
 </html>
