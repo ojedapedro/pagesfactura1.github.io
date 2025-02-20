@@ -56,15 +56,8 @@
             font-size: 12px;
             border-collapse: collapse;
         }
-        .items th {
-            text-align: left;
+        .items th, .items td {
             padding: 5px;
-            background: #f5f5f5;
-            border-bottom: 2px solid #ddd;
-        }
-        .items td {
-            padding: 5px;
-            vertical-align: top;
             border-bottom: 1px solid #eee;
         }
         .payment-info {
@@ -74,11 +67,6 @@
             font-size: 14px;
             border-top: 2px solid #eee;
             padding-top: 10px;
-        }
-        .payment-info p {
-            margin: 8px 0;
-            display: flex;
-            justify-content: space-between;
         }
         .footer {
             margin-top: 20px;
@@ -112,7 +100,6 @@
         <p class="header-text">10A Calle 0-78, Cdad. de Guatemala</p>
         <p class="header-text">Apart-Hotel Posada San Judas</p>
         <p class="header-text">Teléfono: <span id="phone"></span></p>
-        <p class="header-text">TICKET:</p>
         <p class="ticket-number" id="ticket"></p>
         <p class="customer-name" id="customer"></p>
         <p class="date" id="date"></p>
@@ -133,10 +120,11 @@
             <p>EFECTIVO: <span id="cash"></span></p>
             <p>TOTAL: <span id="total"></span></p>
             <p>CAMBIO: <span id="change"></span></p>
+            <p>MÉTODO DE PAGO: <span id="metodo-pago"></span></p>
         </div>
 
         <p class="important" id="estado"></p>
-        <p class="important">MÉTODO DE PAGO: <span id="metodo-pago"></span></p>
+        <p class="important">IMPORTANTE:</p>
 
         <div class="footer">
             <p>Facturas AutoSystem</p>
@@ -147,47 +135,16 @@
 
     <script>
         const params = new URLSearchParams(window.location.search);
-        
         document.getElementById('nit').textContent = '2825515-1';
         document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
         document.getElementById('ticket').textContent = params.get('boleta') || 'Sin número';
         document.getElementById('customer').textContent = params.get('mesa') || 'Cliente General';
         document.getElementById('date').textContent = params.get('fecha') || new Date().toLocaleString('es-GT');
-        document.getElementById('estado').textContent = params.get('estado') || 'Sin estado';
-        document.getElementById('metodo-pago').textContent = params.get('pago') || 'No especificado';
-
-        // Obtener y procesar los productos
-        const itemsContainer = document.getElementById('items-container');
-        const productos = params.get('productos'); // Espera un JSON en formato string
-
-        if (productos) {
-            try {
-                const items = JSON.parse(decodeURIComponent(productos)); // Decodificar y parsear JSON
-                let total = 0;
-                
-                items.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${item.cantidad}</td>
-                        <td>${item.descripcion}</td>
-                        <td>Q${item.precio.toFixed(2)}</td>
-                        <td>Q${(item.cantidad * item.precio).toFixed(2)}</td>
-                    `;
-                    itemsContainer.appendChild(row);
-                    total += item.cantidad * item.precio;
-                });
-
-                // Mostrar totales
-                document.getElementById('total').textContent = `Q${total.toFixed(2)}`;
-                const efectivo = parseFloat(params.get('efectivo')) || 0;
-                document.getElementById('cash').textContent = `Q${efectivo.toFixed(2)}`;
-                document.getElementById('change').textContent = `Q${(efectivo - total).toFixed(2)}`;
-            } catch (error) {
-                console.error('Error al procesar los productos:', error);
-            }
-        } else {
-            itemsContainer.innerHTML = '<tr><td colspan="4" style="text-align: center;">No hay productos</td></tr>';
-        }
+        document.getElementById('metodo-pago').textContent = params.get('metodo') || 'No especificado';
+        document.getElementById('cash').textContent = params.get('efectivo') || '0.00';
+        document.getElementById('total').textContent = params.get('total') || '0.00';
+        document.getElementById('change').textContent = params.get('cambio') || '0.00';
+        document.getElementById('estado').textContent = params.get('estado') || '';
     </script>
 </body>
 </html>
