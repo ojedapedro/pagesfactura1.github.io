@@ -123,12 +123,12 @@
 <body>
     <div class="ticket">
         <!-- Imagen del logo desde ImgBB -->
-        <img src="https://i.ibb.co/qf0C6bb/un-logotipo-con-las-palabras-true-colors-en-letr-2.png" alt="True Colors" class="logo">
+        <img src="https://i.ibb.co/TM2v02nJ/descarga.png" alt="Tiendas K24" class="logo">
         <!-- Texto "True Colors" debajo del logo -->
-        <p class="header-text" style="font-size: 18px; font-weight: bold; margin: 5px 0;">True Colors</p>
-        <p class="header-text">Nit: <span id="nit"></span></p>
-        <p class="header-text">10A Calle 0-78, Cdad. de Guatemala</p>
-        <p class="header-text">Apart-Hotel Posada San Judas</p>
+        <p class="header-text" style="font-size: 18px; font-weight: bold; margin: 5px 0;">Tiendas K24</p>
+        <p class="header-text">Rif: <span id="Rif"></span></p>
+        <p class="header-text">Av Lara Valencia Estado Carabobo</p>
+        <p class="header-text">Casa Verde </p>
         <p class="header-text">Teléfono: <span id="phone"></span></p>
         <p class="header-text">TICKET:</p>
         <p class="ticket-number" id="ticket"></p>
@@ -159,8 +159,8 @@
 
         <div class="footer">
             <p>Facturas AutoSystem</p>
-            <p>Contactos: <a href="tel:+573158208619">+57 315 820 8619</a></p>
-            <p>Síguenos en redes sociales como<br>@truecolors</p>
+            <p>Contactos: <a href="tel:+58 04141234567">+58 0414 123 45 67</a></p>
+            <p>Síguenos en redes sociales como<br>@Tiendas K24</p>
         </div>
     </div>
 
@@ -168,8 +168,8 @@
         const params = new URLSearchParams(window.location.search);
 
         // Set fixed content
-        document.getElementById('nit').textContent = '2825515-1';
-        document.getElementById('phone').textContent = '502 2363-2036 / 502 4183-1220';
+        document.getElementById('Rif').textContent = '12345678-1';
+        document.getElementById('phone').textContent = '0414 3415401 / 0412 1234567';
         document.getElementById('ticket').textContent = params.get('boleta') || 'Sin número';
         document.getElementById('customer').textContent = params.get('mesa') || 'Cliente General';
 
@@ -220,9 +220,9 @@
         }
 
         // Valores de efectivo, total y cambio
-        document.getElementById('cash').textContent = `Q${normalizarPrecio(params.get('efectivo'))}`;
-        document.getElementById('total').textContent = `Q${normalizarPrecio(params.get('total'))}`;
-        document.getElementById('change').textContent = `Q${normalizarPrecio(params.get('devueltas'))}`;
+        document.getElementById('cash').textContent = `$${normalizarPrecio(params.get('efectivo'))}`;
+        document.getElementById('total').textContent = `$${normalizarPrecio(params.get('total'))}`;
+        document.getElementById('change').textContent = `$${normalizarPrecio(params.get('devueltas'))}`;
 
         // Estado dinámico
         document.getElementById('estado').textContent = params.get('estado') || 'Sin estado';
